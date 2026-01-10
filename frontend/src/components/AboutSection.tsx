@@ -1,28 +1,26 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Utensils, Wine, Music, ArrowUpRight } from 'lucide-react'
-import loungeImg from '../assets/lounge-1.jpg'
-import dish1 from '@/assets/dish-1.jpg';
+import { ArrowUpRight, LucideIcon } from 'lucide-react';
 
-const features = [
-  {
-    icon: Utensils,
-    title: 'Authentic Fusion',
-    description: 'Modern Nepali cuisine reimagined with global influences.',
-  },
-  {
-    icon: Wine,
-    title: 'Craft Cocktails',
-    description: 'Signature drinks crafted by award-winning mixologists.',
-  },
-  {
-    icon: Music,
-    title: 'Electric Nights',
-    description: 'Live performances and curated beats every weekend.',
-  },
-];
+interface Feature {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
 
-const AboutSection = () => {
+interface AboutData {
+  title: string;
+  description: string;
+  imageMain: string;
+  imageSmall: string;
+  features: Feature[];
+}
+
+interface AboutSectionProps {
+  data: AboutData;
+}
+
+const AboutSection = ({ data }: AboutSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -37,7 +35,7 @@ const AboutSection = () => {
 
       {/* Gradient orbs */}
       <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[200px] pointer-events-none" />
-      
+
       <div className="container-custom relative" ref={ref}>
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Images */}
@@ -52,8 +50,8 @@ const AboutSection = () => {
               <motion.img
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.7 }}
-                src={loungeImg}
-                alt="Chincha Piro Lounge"
+                src={data.imageMain}
+                alt="Venue Ambience"
                 className="w-full h-[550px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
@@ -67,8 +65,8 @@ const AboutSection = () => {
               className="absolute -bottom-8 -right-8 w-48 h-64 rounded-2xl overflow-hidden border-4 border-background shadow-2xl z-20 hidden md:block"
             >
               <img
-                src={dish1}
-                alt="Signature Dish"
+                src={data.imageSmall}
+                alt="Detail"
                 className="w-full h-full object-cover"
               />
             </motion.div>
@@ -106,25 +104,17 @@ const AboutSection = () => {
             </motion.span>
 
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-[1.1]">
-              A Culinary Journey{' '}
-              <span className="text-gradient italic">Beyond</span>{' '}
-              the Ordinary
+              <span className="block">{data.title.split(' ').slice(0, 3).join(' ')}</span>
+              <span className="text-gradient italic">{data.title.split(' ').slice(3).join(' ')}</span>
             </h2>
 
             <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
-              Nestled in the vibrant heart of Kathmandu, Chincha Piro transcends the ordinary dining experience. 
-              We're a sanctuary where ancient Nepali culinary traditions dance with contemporary creativity.
-            </p>
-
-            <p className="text-muted-foreground mb-10 leading-relaxed">
-              Every dish tells a story, every cocktail sparks a conversation, and every night 
-              becomes a memory worth keeping. This isn't just dining—it's an experience crafted 
-              for the bold, the curious, and the connoisseurs.
+              {data.description}
             </p>
 
             {/* Features */}
             <div className="space-y-4">
-              {features.map((feature, index) => (
+              {data.features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
                   initial={{ opacity: 0, x: 40 }}

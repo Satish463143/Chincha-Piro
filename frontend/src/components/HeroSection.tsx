@@ -2,9 +2,25 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from './ui/button';
 import { ChevronDown, Play, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
-import heroBg from '@/assets/hero-bg.jpg';
+import defaultHeroBg from '@/assets/hero-bg.jpg';
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  titleLine1?: string;
+  titleLine2?: string; // "Flavor" (gradient part)
+  titleLine3?: string; // "Meets Vibe"
+  subtitle?: string;
+  backgroundImage?: string;
+  showReservation?: boolean;
+}
+
+const HeroSection = ({
+  titleLine1 = "Where",
+  titleLine2 = "Flavor",
+  titleLine3 = "Meets Vibe",
+  subtitle = "Authentic Nepali fusion cuisine, handcrafted cocktails, and nights you'll never forget.",
+  backgroundImage = defaultHeroBg,
+  showReservation = true
+}: HeroSectionProps) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -22,6 +38,14 @@ const HeroSection = () => {
     }
   };
 
+  // Splitting titleLine3 for specific styling if it contains "Meets" and "Vibe"
+  // For simplicity in this refactor, I'll keep the structure generic but try to preserve the existing look.
+  // The original was "Meets" (text) and "Vibe" (outline). 
+  // I will assume titleLine3 is passed as a simple string or I need a more complex prop structure if I want mix of styles.
+  // To keep it simple for now, I will render titleLine3 as is, but if it matches the default, I'll apply the special styling.
+
+  const isDefaultTitle = titleLine3 === "Meets Vibe";
+
   return (
     <section
       ref={ref}
@@ -31,8 +55,9 @@ const HeroSection = () => {
       {/* Parallax Background */}
       <motion.div style={{ y, scale }} className="absolute inset-0 z-0">
         <img
-          src={heroBg}
-          alt="Chincha Piro Restaurant Lounge"
+          src={backgroundImage}
+          alt="Hero Background"
+          loading="eager"
           className="w-full h-full object-cover"
         />
         {/* Cinematic overlay */}
@@ -41,7 +66,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-background/40" />
       </motion.div>
 
-      {/* Animated Orbs */}
+      {/* Animated Orbs - Kept consistent */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{
@@ -74,7 +99,7 @@ const HeroSection = () => {
         >
           <span className="inline-flex items-center  gap-2 px-5 py-2 rounded-full border border-primary/30 bg-primary/5 backdrop-blur-xl text-sm font-medium tracking-wide">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-gradient">Premium Dining Experience</span>
+            <span className="text-gradient">Premium Experience</span>
           </span>
         </motion.div>
 
@@ -86,7 +111,7 @@ const HeroSection = () => {
             transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tight"
           >
-            <span className="block text-foreground">Where</span>
+            <span className="block text-foreground">{titleLine1}</span>
           </motion.h1>
         </div>
         <div className="overflow-hidden mb-6 px-4">
@@ -96,7 +121,7 @@ const HeroSection = () => {
             transition={{ duration: 1, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tight"
           >
-            <span className="text-gradient-animated italic inline-block pr-4">Flavor</span>
+            <span className="text-gradient-animated italic inline-block pr-4">{titleLine2}</span>
           </motion.h1>
         </div>
         <div className="overflow-hidden mb-10">
@@ -106,8 +131,14 @@ const HeroSection = () => {
             transition={{ duration: 1, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tight"
           >
-            <span className="text-foreground">Meets </span>
-            <span className="text-outline">Vibe</span>
+            {isDefaultTitle ? (
+              <>
+                <span className="text-foreground">Meets </span>
+                <span className="text-outline">Vibe</span>
+              </>
+            ) : (
+              <span className="text-foreground">{titleLine3}</span>
+            )}
           </motion.h1>
         </div>
 
@@ -118,7 +149,7 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.8 }}
           className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-12 font-light leading-relaxed"
         >
-          Authentic Nepali fusion cuisine, handcrafted cocktails, and nights you'll never forget.
+          {subtitle}
         </motion.p>
 
         {/* CTA Buttons */}
@@ -144,76 +175,34 @@ const HeroSection = () => {
               </motion.span>
             </span>
           </Button>
-          <Button
-            variant="hero-outline"
-            size="xl"
-            onClick={() => scrollToSection('#reservations')}
-            className="group"
-          >
-            <Play className="w-4 h-4 mr-2 transition-transform group-hover:scale-110" />
-            Reserve Table
-          </Button>
+          {showReservation && (
+            <Button
+              variant="hero-outline"
+              size="xl"
+              onClick={() => scrollToSection('#reservations')}
+              className="group"
+            >
+              <Play className="w-4 h-4 mr-2 transition-transform group-hover:scale-110" />
+              Reserve Table
+            </Button>
+          )}
         </motion.div>
 
-        {/* Stats Bar */}
-        {/* <motion.div
+        {/* Side Text - Only for default view or if added back */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.4 }}
-          className="mt-20 flex items-center justify-center gap-8 md:gap-16"
+          transition={{ duration: 1, delay: 1.5 }}
+          className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 hidden lg:block"
         >
-          {[
-            { value: '4.9★', label: 'Google Rating' },
-            { value: '15K+', label: 'Followers' },
-            { value: '10+', label: 'Years' },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.5 + index * 0.1 }}
-              className="text-center"
-            >
-              <div className="text-2xl md:text-3xl font-display font-bold text-gradient">{stat.value}</div>
-              <div className="text-xs md:text-sm text-muted-foreground uppercase tracking-widest">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div> */}
-      </motion.div>
-
-      {/* Scroll Indicator */}
-      {/* <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.button
-          animate={{ y: [0, 12, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          onClick={() => scrollToSection('#about')}
-          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-          aria-label="Scroll down"
-        >
-          <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
-          <ChevronDown size={24} />
-        </motion.button>
-      </motion.div> */}
-
-      {/* Side Text */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.5 }}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 hidden lg:block"
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-px h-20 bg-gradient-to-b from-transparent via-primary to-transparent" />
-          <span className="text-xs uppercase tracking-[0.4em] text-muted-foreground [writing-mode:vertical-lr] rotate-180">
-            Est. 2014
-          </span>
-          <div className="w-px h-20 bg-gradient-to-b from-transparent via-secondary to-transparent" />
-        </div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-px h-20 bg-gradient-to-b from-transparent via-primary to-transparent" />
+            <span className="text-xs uppercase tracking-[0.4em] text-muted-foreground [writing-mode:vertical-lr] rotate-180">
+              Est. 2014
+            </span>
+            <div className="w-px h-20 bg-gradient-to-b from-transparent via-secondary to-transparent" />
+          </div>
+        </motion.div>
       </motion.div>
     </section>
   );

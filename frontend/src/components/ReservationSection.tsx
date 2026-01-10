@@ -5,7 +5,11 @@ import { Calendar, Clock, Users, Phone, User, CheckCircle, Sparkles } from 'luci
 import { toast } from '@/hooks/use-toast';
 import heroBg from '@/assets/hero-bg.jpg';
 
-const ReservationSection = () => {
+interface ReservationSectionProps {
+  backgroundImage?: string;
+}
+
+const ReservationSection = ({ backgroundImage = heroBg }: ReservationSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -39,7 +43,7 @@ const ReservationSection = () => {
     <section id="reservations" className="relative overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
-        <img src={heroBg} alt="" className="w-full h-full object-cover" />
+        <img src={backgroundImage} alt="" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/80" />
       </div>
 
@@ -60,7 +64,7 @@ const ReservationSection = () => {
               <span className="text-gradient italic">Experience</span>
             </h2>
             <p className="text-muted-foreground text-lg mb-10 leading-relaxed max-w-lg">
-              Whether it's an intimate dinner for two or a celebration with friends, 
+              Whether it's an intimate dinner for two or a celebration with friends,
               we're ready to craft an evening you'll never forget.
             </p>
 

@@ -1,37 +1,31 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Instagram, X, ZoomIn } from 'lucide-react';
-import heroBg from '@/assets/hero-bg.jpg';
-import dish1 from '@/assets/dish-1.jpg';
-import dish2 from '@/assets/dish-2.jpg';
-import dish3 from '@/assets/dish-3.jpg';
-import cocktail1 from '@/assets/cocktail-1.jpg';
-import cocktail2 from '@/assets/cocktail-2.jpg';
-import lounge1 from '@/assets/lounge-1.jpg';
-import lounge2 from '@/assets/lounge-2.jpg';
 
-const galleryImages = [
-  { src: lounge1, alt: 'Lounge interior', size: 'large' },
-  { src: dish1, alt: 'Signature dish', size: 'small' },
-  { src: cocktail1, alt: 'Craft cocktail', size: 'small' },
-  { src: heroBg, alt: 'Dining ambiance', size: 'medium' },
-  { src: dish2, alt: 'Fusion appetizers', size: 'small' },
-  { src: lounge2, alt: 'Bar experience', size: 'medium' },
-  { src: dish3, alt: 'Premium steak', size: 'small' },
-  { src: cocktail2, alt: 'Tropical drink', size: 'small' },
-];
+interface GalleryImage {
+  src: string;
+  alt: string;
+  size: string; // 'small' | 'medium' | 'large'
+}
 
-const GallerySection = () => {
+interface GallerySectionProps {
+  images: GalleryImage[];
+}
+
+const GallerySection = ({ images }: GallerySectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  // Fallback if no images provided
+  if (!images || images.length === 0) return null;
+
   return (
     <section id="gallery" className="section-padding bg-card relative overflow-hidden">
       {/* Background texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-background to-card pointer-events-none" />
-      
+
       <div className="container-custom relative" ref={ref}>
         {/* Header */}
         <motion.div
@@ -64,7 +58,7 @@ const GallerySection = () => {
 
         {/* Masonry Gallery */}
         <div className="columns-2 md:columns-3 gap-4 space-y-4">
-          {galleryImages.map((image, index) => (
+          {images.map((image, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
@@ -73,10 +67,9 @@ const GallerySection = () => {
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               onClick={() => setSelectedImage(image.src)}
-              className={`relative rounded-2xl overflow-hidden cursor-pointer break-inside-avoid group ${
-                image.size === 'large' ? 'aspect-[4/5]' : 
-                image.size === 'medium' ? 'aspect-[4/3]' : 'aspect-square'
-              }`}
+              className={`relative rounded-2xl overflow-hidden cursor-pointer break-inside-avoid group ${image.size === 'large' ? 'aspect-[4/5]' :
+                  image.size === 'medium' ? 'aspect-[4/3]' : 'aspect-square'
+                }`}
             >
               <motion.img
                 animate={{
@@ -87,7 +80,7 @@ const GallerySection = () => {
                 alt={image.alt}
                 className="w-full h-full object-cover"
               />
-              
+
               {/* Hover overlay */}
               <motion.div
                 initial={{ opacity: 0 }}
@@ -96,9 +89,9 @@ const GallerySection = () => {
               >
                 <motion.div
                   initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{ 
-                    scale: hoveredIndex === index ? 1 : 0.5, 
-                    opacity: hoveredIndex === index ? 1 : 0 
+                  animate={{
+                    scale: hoveredIndex === index ? 1 : 0.5,
+                    opacity: hoveredIndex === index ? 1 : 0
                   }}
                   transition={{ duration: 0.3 }}
                   className="w-14 h-14 rounded-full bg-background/90 backdrop-blur-xl flex items-center justify-center"

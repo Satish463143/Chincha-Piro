@@ -2,40 +2,18 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const reviews = [
-  {
-    id: 1,
-    name: 'Priya Sharma',
-    role: 'Food Blogger',
-    content: 'The ambiance is unmatched! The fusion momos are absolutely divine, and the cocktails are crafted to perfection. A must-visit for anyone who appreciates culinary excellence.',
-    rating: 5,
-    avatar: 'PS',
-  },
-  {
-    id: 2,
-    name: 'Rohan Karki',
-    role: 'Regular Guest',
-    content: 'My go-to spot for special occasions. The staff makes you feel like family, and the Himalayan lamb curry is simply the best in town. Pure magic!',
-    rating: 5,
-    avatar: 'RK',
-  },
-  {
-    id: 3,
-    name: 'Maya Thapa',
-    role: 'Travel Writer',
-    content: 'Found this gem while exploring Kathmandu. The lounge vibe at night is electric. Their signature cocktails are Instagram-worthy and taste even better!',
-    rating: 5,
-    avatar: 'MT',
-  },
-  {
-    id: 4,
-    name: 'Arun Basnet',
-    role: 'Local Foodie',
-    content: 'Chincha Piro perfectly blends tradition with modern flair. The grilled steak melts in your mouth. Worth every rupee—this is fine dining done right.',
-    rating: 5,
-    avatar: 'AB',
-  },
-];
+interface Review {
+  id: number;
+  name: string;
+  role: string;
+  content: string;
+  rating: number;
+  avatar: string;
+}
+
+interface ReviewsSectionProps {
+  reviews: Review[];
+}
 
 const stats = [
   { value: '4.9', label: 'Rating', icon: '⭐' },
@@ -44,7 +22,7 @@ const stats = [
   { value: '10+', label: 'Years', icon: '🏆' },
 ];
 
-const ReviewsSection = () => {
+const ReviewsSection = ({ reviews }: ReviewsSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,7 +34,7 @@ const ReviewsSection = () => {
       setCurrentIndex((prev) => (prev + 1) % reviews.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [isAutoPlay]);
+  }, [isAutoPlay, reviews.length]);
 
   const nextSlide = () => {
     setIsAutoPlay(false);
@@ -128,7 +106,7 @@ const ReviewsSection = () => {
           <div className="glass-card rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
             {/* Quote decoration */}
             <Quote className="absolute top-8 right-8 w-20 h-20 text-primary/10" />
-            
+
             <motion.div
               key={currentIndex}
               initial={{ opacity: 0, x: 50 }}
@@ -171,11 +149,10 @@ const ReviewsSection = () => {
                     setIsAutoPlay(false);
                     setCurrentIndex(index);
                   }}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    index === currentIndex
+                  className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
                       ? 'w-8 bg-gradient-to-r from-primary to-secondary'
                       : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
-                  }`}
+                    }`}
                 />
               ))}
             </div>

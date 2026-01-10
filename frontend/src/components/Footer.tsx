@@ -137,14 +137,13 @@ const Footer = () => {
           className="mt-16 pt-8 border-t border-border/30 flex flex-col md:flex-row items-center justify-between gap-6"
         >
           <p className="text-sm text-muted-foreground">
-            © 2024 Chincha Piro Restaurant Lounge & Bar. All rights reserved.
+            © {new Date().getFullYear()} Chincha Piro Restaurant Lounge & Bar. All rights reserved.
           </p>
           
           <div className="flex items-center gap-6">
             <p className="text-sm text-muted-foreground flex items-center gap-2">
-              Made with <span className="text-primary animate-pulse">♥</span> in Kathmandu
-            </p>
-            
+              Design and Developed by <a href="https://bleedingtech.com.np" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Bleeding Tech Pvt. Ltd.</a>
+            </p>            
             {/* Back to top button */}
             <motion.button
               onClick={scrollToTop}
