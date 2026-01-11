@@ -12,27 +12,96 @@ interface GallerySectionProps {
   images: GalleryImage[];
 }
 
+const MarqueeRow = ({ images, direction = 'left', speed = 20, onImageClick }: { images: GalleryImage[], direction?: 'left' | 'right', speed?: number, onImageClick: (src: string) => void }) => {
+  // Use 4 copies to ensure seamless loop with margin-based spacing
+  const marqueeImages = [...images, ...images, ...images, ...images];
+
+  return (
+    <div className="flex overflow-hidden">
+      <motion.div
+        initial={{ x: direction === 'left' ? 0 : '-50%' }}
+        animate={{ x: direction === 'left' ? '-50%' : 0 }}
+        transition={{
+          duration: speed,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="flex min-w-full"
+      >
+        {marqueeImages.map((image, index) => (
+          <motion.div
+            key={`${image.src}-${index}`}
+            initial="initial"
+            whileHover="hover"
+            onClick={() => onImageClick(image.src)}
+            className="flex-shrink-0 relative group cursor-pointer overflow-hidden rounded-xl mr-4"
+            style={{
+              height: '250px', // Fixed height as requested
+              width: 'auto',  // Width auto
+            }}
+          >
+            <motion.img
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.1 }
+              }}
+              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+              src={image.src}
+              alt={image.alt}
+              className="h-full w-auto object-cover"
+              draggable="false"
+            />
+
+            {/* Hover overlay */}
+            <motion.div
+              variants={{
+                initial: { opacity: 0 },
+                hover: { opacity: 1 }
+              }}
+              className="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/20 to-transparent flex items-center justify-center"
+            >
+              <motion.div
+                variants={{
+                  initial: { scale: 0.5, opacity: 0 },
+                  hover: { scale: 1, opacity: 1 }
+                }}
+                transition={{ duration: 0.3 }}
+                className="w-14 h-14 rounded-full bg-background/90 backdrop-blur-xl flex items-center justify-center"
+              >
+                <ZoomIn className="w-6 h-6 text-foreground" />
+              </motion.div>
+            </motion.div>
+
+            {/* Corner accent */}
+            <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-foreground/20 group-hover:border-primary/60 transition-colors duration-300 rounded-tr-lg" />
+            <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-foreground/20 group-hover:border-secondary/60 transition-colors duration-300 rounded-bl-lg" />
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
 const GallerySection = ({ images }: GallerySectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   // Fallback if no images provided
   if (!images || images.length === 0) return null;
 
   return (
-    <section id="gallery" className="section-padding bg-card relative overflow-hidden">
+    <section id="gallery" className="section-padding px-0  bg-card relative overflow-hidden">
       {/* Background texture */}
       <div className="absolute inset-0 bg-gradient-to-b from-background to-card pointer-events-none" />
 
-      <div className="container-custom relative" ref={ref}>
+      <div className=" relative" ref={ref}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16"
+          className="container-custom flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16"
         >
           <div>
             <span className="inline-block text-sm font-medium text-secondary uppercase tracking-[0.3em] mb-6">
@@ -56,55 +125,11 @@ const GallerySection = ({ images }: GallerySectionProps) => {
           </motion.a>
         </motion.div>
 
-        {/* Masonry Gallery */}
-        <div className="columns-2 md:columns-3 gap-4 space-y-4">
-          {images.map((image, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.08 }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => setSelectedImage(image.src)}
-              className={`relative rounded-2xl overflow-hidden cursor-pointer break-inside-avoid group ${image.size === 'large' ? 'aspect-[4/5]' :
-                  image.size === 'medium' ? 'aspect-[4/3]' : 'aspect-square'
-                }`}
-            >
-              <motion.img
-                animate={{
-                  scale: hoveredIndex === index ? 1.1 : 1,
-                }}
-                transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-full object-cover"
-              />
-
-              {/* Hover overlay */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
-                className="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/20 to-transparent flex items-center justify-center"
-              >
-                <motion.div
-                  initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{
-                    scale: hoveredIndex === index ? 1 : 0.5,
-                    opacity: hoveredIndex === index ? 1 : 0
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="w-14 h-14 rounded-full bg-background/90 backdrop-blur-xl flex items-center justify-center"
-                >
-                  <ZoomIn className="w-6 h-6 text-foreground" />
-                </motion.div>
-              </motion.div>
-
-              {/* Corner accent */}
-              <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-foreground/20 group-hover:border-primary/60 transition-colors duration-300 rounded-tr-lg" />
-              <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-foreground/20 group-hover:border-secondary/60 transition-colors duration-300 rounded-bl-lg" />
-            </motion.div>
-          ))}
+        {/* Marquee Gallery */}
+        <div className="space-y-6 md:space-y-8 overflow-hidden w-full">
+          <MarqueeRow images={images.slice(0, 5)} direction="left" speed={20} onImageClick={setSelectedImage} />
+          <MarqueeRow images={images.slice(5, 10).length > 0 ? images.slice(5, 10) : images.slice(0, 5)} direction="right" speed={25} onImageClick={setSelectedImage} />
+          <MarqueeRow images={images.slice(10).length > 0 ? images.slice(10) : images.slice(0, 5)} direction="left" speed={22} onImageClick={setSelectedImage} />
         </div>
 
         {/* Stats row */}
@@ -112,7 +137,7 @@ const GallerySection = ({ images }: GallerySectionProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-16 grid grid-cols-3 gap-4 glass-card rounded-3xl p-8"
+          className="container-custom mt-16 grid grid-cols-3 gap-4 glass-card rounded-3xl p-8"
         >
           {[
             { value: '15K+', label: 'Followers' },

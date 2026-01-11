@@ -186,9 +186,9 @@ const HeroSection = ({
               Reserve Table
             </Button>
           )}
-        </motion.div>
-
-        {/* Side Text - Only for default view or if added back */}
+        </motion.div>        
+      </motion.div>
+      {/* Side Text - Only for default view or if added back */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -203,7 +203,6 @@ const HeroSection = ({
             <div className="w-px h-20 bg-gradient-to-b from-transparent via-secondary to-transparent" />
           </div>
         </motion.div>
-      </motion.div>
     </section>
   );
 };

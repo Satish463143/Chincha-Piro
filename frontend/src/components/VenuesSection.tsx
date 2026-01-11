@@ -1,40 +1,8 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, UtensilsCrossed, Coffee, Fish } from 'lucide-react';
+import { ArrowRight} from 'lucide-react';
+import { venues } from '@/data/venueData';
 
 const VenuesSection = () => {
-  const venues = [
-    {
-      id: 'restaurant',
-      title: 'The Restaurant',
-      subtitle: 'Fine Dining Experience',
-      description: 'Immerse yourself in culinary artistry where every dish tells a story of passion and precision.',
-      icon: UtensilsCrossed,
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200',
-      path: '/restaurant',
-      accentColor: 'pink',
-    },
-    {
-      id: 'tea-spot',
-      title: 'Tea Spot',
-      subtitle: 'Artisan Café & Lounge',
-      description: 'A sanctuary of rare teas and handcrafted delicacies in an atmosphere of refined tranquility.',
-      icon: Coffee,
-      image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1200',
-      path: '/tea-spot',
-      accentColor: 'orange',
-    },
-    {
-      id: 'fish-spot',
-      title: 'Fish Spot',
-      subtitle: 'Ocean to Table',
-      description: 'Fresh catches transformed into extraordinary dishes celebrating the bounty of the sea.',
-      icon: Fish,
-      image: 'https://images.squarespace-cdn.com/content/v1/64e590f57ae9700033820f07/c3d1fe60-f4b7-4b04-9548-93c50d265429/DSC_2829-Enhanced-NR-Edit-Edit.jpg',
-      path: '/fish-spot',
-      accentColor: 'pink',
-    }
-  ];
-
   return (
     <section className="py-28 md:py-40 relative overflow-hidden bg-background">
       {/* Dramatic ambient background */}

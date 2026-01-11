@@ -8,7 +8,7 @@ import heroBg from '@/assets/hero-bg.jpg';
 import loungeImg from '@/assets/lounge-1.jpg'; // Corrected import path pattern
 import lounge1 from '@/assets/lounge-1.jpg';
 
-import { Utensils, Wine, Music, Coffee, Fish, Anchor, MapPin, Phone, Clock, Mail } from 'lucide-react';
+import { Utensils, Wine, Music, Coffee,UtensilsCrossed, Fish, Anchor, MapPin, Phone, Clock, Mail } from 'lucide-react';
 
 // Shared Map URL for now, can be specific if needed
 const defaultMapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.0714839387494!2d85.30934807571694!3d27.715324926184594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb18fdbd8888fb%3A0x99ed61c0f4bdd0af!2sThamel%2C%20Kathmandu%2044600%2C%20Nepal!5e0!3m2!1sen!2sus!4v1704000000000!5m2!1sen!2sus";
@@ -424,3 +424,36 @@ export const fishSpotData = {
         ]
     }
 };
+
+export const venues = [
+    {
+      id: 'restaurant',
+      title: 'The Restaurant',
+      subtitle: 'Fine Dining Experience',
+      description: 'Immerse yourself in culinary artistry where every dish tells a story of passion and precision.',
+      icon: UtensilsCrossed,
+      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200',
+      path: '/restaurant',
+      accentColor: 'pink',
+    },
+    {
+      id: 'tea-spot',
+      title: 'Tea Spot',
+      subtitle: 'Artisan Café & Lounge',
+      description: 'A sanctuary of rare teas and handcrafted delicacies in an atmosphere of refined tranquility.',
+      icon: Coffee,
+      image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1200',
+      path: '/tea-spot',
+      accentColor: 'orange',
+    },
+    {
+      id: 'fish-spot',
+      title: 'Fish Spot',
+      subtitle: 'Ocean to Table',
+      description: 'Fresh catches transformed into extraordinary dishes celebrating the bounty of the sea.',
+      icon: Fish,
+      image: 'https://images.squarespace-cdn.com/content/v1/64e590f57ae9700033820f07/c3d1fe60-f4b7-4b04-9548-93c50d265429/DSC_2829-Enhanced-NR-Edit-Edit.jpg',
+      path: '/fish-spot',
+      accentColor: 'pink',
+    }
+];
